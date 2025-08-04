@@ -12,8 +12,8 @@ const PadelRankingApp = () => {
   const [showFAB, setShowFAB] = useState(false);
   const [newPlayerName, setNewPlayerName] = useState('');
   const [isFirstTime, setIsFirstTime] = useState(true);
-  const touchStartRef = useRef(null);
-  const touchEndRef = useRef(null);
+  const touchStartRef = useRef<number | null>(null);
+  const touchEndRef = useRef<number | null>(null);
 
   // Match form state
   const [selectedPlayers, setSelectedPlayers] = useState({
