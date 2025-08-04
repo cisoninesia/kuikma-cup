@@ -237,7 +237,7 @@ const PadelRankingApp = () => {
           <div className="text-center">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
               <Trophy className="text-yellow-500" size={24} />
-              Madrid Padel
+              Kuikma CUP
             </h1>
             <p className="text-sm text-gray-600 mt-1">ATP Rankings & Stats</p>
           </div>
@@ -254,7 +254,7 @@ const PadelRankingApp = () => {
             {isFirstTime ? (
               <EmptyState
                 icon={Trophy}
-                title="Welcome to Madrid Padel!"
+                title="Welcome to Kuikma CUP!"
                 subtitle="Start by adding your team players to begin tracking rankings and matches"
                 action={() => setShowAddPlayer(true)}
                 actionText="Add First Player"
