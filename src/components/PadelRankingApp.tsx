@@ -3,10 +3,33 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Users, Plus, Trophy, History, UserPlus, TrendingUp, Home, ChevronUp, X, Zap, Award, Target, BarChart3 } from 'lucide-react';
 
+// Type definitions
+interface MatchSet {
+  team1: number;
+  team2: number;
+}
+
+interface Match {
+  id: number;
+  date: string;
+  team1: string[];
+  team2: string[];
+  sets: MatchSet[];
+  winner: 'team1' | 'team2';
+}
+
+interface Player {
+  name: string;
+  points: number;
+  matches: number;
+  wins: number;
+  rank: number;
+}
+
 const PadelRankingApp = () => {
   const [activeTab, setActiveTab] = useState('rankings');
-  const [players, setPlayers] = useState([]);
-  const [matches, setMatches] = useState([]);
+  const [players, setPlayers] = useState<string[]>([]);
+  const [matches, setMatches] = useState<Match[]>([]);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
   const [showMatchForm, setShowMatchForm] = useState(false);
   const [showFAB, setShowFAB] = useState(false);
@@ -103,7 +126,7 @@ const PadelRankingApp = () => {
     return (matchWins * 100) + (setWins * 10) + gameWins;
   };
 
-  const getRankings = () => {
+  const getRankings = (): Player[] => {
     return players.map(player => ({
       name: player,
       points: calculatePoints(player),
@@ -181,11 +204,11 @@ const PadelRankingApp = () => {
     setShowFAB(false);
   };
 
-  const formatMatchScore = (match) => {
+  const formatMatchScore = (match: Match): string => {
     return match.sets.map(set => `${set.team1}-${set.team2}`).join(', ');
   };
 
-  const getRecentMatches = () => {
+  const getRecentMatches = (): Match[] => {
     return matches.slice(-3).reverse();
   };
 
