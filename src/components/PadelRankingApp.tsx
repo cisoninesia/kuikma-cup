@@ -191,7 +191,7 @@ const PadelRankingApp = () => {
 
   const QuickStats = () => (
     <div className="grid grid-cols-3 gap-3 mb-4">
-      <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-3 text-white text-center shadow-lg">
+      <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-3 text-white text-center shadow-lg">
         <div className="text-2xl font-bold">{players.length}</div>
         <div className="text-xs opacity-90">Players</div>
       </div>
@@ -208,15 +208,15 @@ const PadelRankingApp = () => {
 
   const EmptyState = ({ icon: Icon, title, subtitle, action, actionText }) => (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-      <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center mb-6 shadow-lg">
-        <Icon size={32} className="text-emerald-600" />
+      <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-6 shadow-lg">
+        <Icon size={32} className="text-blue-600" />
       </div>
       <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
       <p className="text-gray-600 mb-6 max-w-sm">{subtitle}</p>
       {action && (
         <button
           onClick={action}
-          className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
+          className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
         >
           {actionText}
         </button>
@@ -226,7 +226,7 @@ const PadelRankingApp = () => {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative"
+      className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50 relative"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -235,7 +235,7 @@ const PadelRankingApp = () => {
       <div className="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-40">
         <div className="max-w-md mx-auto px-4 py-4">
           <div className="text-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
               <Trophy className="text-yellow-500" size={24} />
               Kuikma CUP
             </h1>
@@ -265,7 +265,7 @@ const PadelRankingApp = () => {
                 {matches.length > 0 && (
                   <div className="bg-white rounded-2xl shadow-lg p-4 mb-4">
                     <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                      <Zap size={16} className="text-emerald-600" />
+                      <Zap size={16} className="text-blue-600" />
                       Recent Matches
                     </h3>
                     <div className="space-y-2">
@@ -277,7 +277,7 @@ const PadelRankingApp = () => {
                               <div className="text-gray-600">vs {match.team2.join(' & ')}</div>
                             </div>
                             <div className="text-right">
-                              <div className="text-sm font-bold text-emerald-600">{formatMatchScore(match)}</div>
+                              <div className="text-sm font-bold text-blue-600">{formatMatchScore(match)}</div>
                               <div className="text-xs text-gray-500">{match.date}</div>
                             </div>
                           </div>
@@ -309,7 +309,7 @@ const PadelRankingApp = () => {
                             player.rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' :
                             player.rank === 2 ? 'bg-gradient-to-br from-gray-400 to-gray-600' :
                             player.rank === 3 ? 'bg-gradient-to-br from-orange-400 to-orange-600' :
-                            'bg-gradient-to-br from-emerald-400 to-teal-600'
+                            'bg-gradient-to-br from-blue-400 to-indigo-600'
                           }`}>
                             #{player.rank}
                           </div>
@@ -318,7 +318,7 @@ const PadelRankingApp = () => {
                             <div className="text-sm text-gray-600">{player.points} pts • {player.matches} matches</div>
                           </div>
                           <div className="text-right">
-                            <div className="text-lg font-bold text-emerald-600">{player.wins}</div>
+                            <div className="text-lg font-bold text-blue-600">{player.wins}</div>
                             <div className="text-xs text-gray-500">wins</div>
                           </div>
                         </div>
@@ -352,13 +352,13 @@ const PadelRankingApp = () => {
                   <div key={match.id} className="border border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition-colors">
                     <div className="flex justify-between items-start mb-3">
                       <div className="text-sm text-gray-500">{match.date}</div>
-                      <div className="text-sm font-bold text-emerald-600">
+                      <div className="text-sm font-bold text-blue-600">
                         {formatMatchScore(match)}
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-3 items-center">
                       <div className={`text-center p-3 rounded-xl ${
-                        match.winner === 'team1' ? 'bg-emerald-100 border-2 border-emerald-300' : 'bg-gray-100'
+                        match.winner === 'team1' ? 'bg-blue-100 border-2 border-blue-300' : 'bg-gray-100'
                       }`}>
                         <div className="font-semibold text-gray-800 text-sm">Team 1</div>
                         <div className="text-xs text-gray-600 mt-1">
@@ -369,7 +369,7 @@ const PadelRankingApp = () => {
                         <div className="text-sm font-bold text-gray-700">VS</div>
                       </div>
                       <div className={`text-center p-3 rounded-xl ${
-                        match.winner === 'team2' ? 'bg-emerald-100 border-2 border-emerald-300' : 'bg-gray-100'
+                        match.winner === 'team2' ? 'bg-blue-100 border-2 border-blue-300' : 'bg-gray-100'
                       }`}>
                         <div className="font-semibold text-gray-800 text-sm">Team 2</div>
                         <div className="text-xs text-gray-600 mt-1">
@@ -402,9 +402,9 @@ const PadelRankingApp = () => {
             ) : (
               <div className="grid grid-cols-1 gap-3">
                 {players.map((player, index) => (
-                  <div key={index} className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-100">
+                  <div key={index} className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                         {player.charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1">
@@ -414,7 +414,7 @@ const PadelRankingApp = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-lg font-bold text-emerald-600">
+                        <div className="text-lg font-bold text-blue-600">
                           {matches.filter(m => 
                             (m.team1.includes(player) && m.winner === 'team1') ||
                             (m.team2.includes(player) && m.winner === 'team2')
@@ -453,14 +453,14 @@ const PadelRankingApp = () => {
                 }}
                 className="flex items-center gap-3 bg-white shadow-lg rounded-full px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105"
               >
-                <BarChart3 size={16} className="text-emerald-500" />
+                <BarChart3 size={16} className="text-blue-500" />
                 Add Match
               </button>
             </div>
           )}
           <button
             onClick={() => setShowFAB(!showFAB)}
-            className={`w-14 h-14 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-300 hover:scale-110 active:scale-95 ${
+            className={`w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-300 hover:scale-110 active:scale-95 ${
               showFAB ? 'rotate-45' : 'rotate-0'
             }`}
           >
@@ -477,8 +477,8 @@ const PadelRankingApp = () => {
               onClick={() => setActiveTab('rankings')}
               className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-200 min-h-[44px] ${
                 activeTab === 'rankings'
-                  ? 'text-emerald-600 bg-emerald-50'
-                  : 'text-gray-600 hover:text-emerald-600'
+                  ? 'text-blue-600 bg-blue-50'
+                  : 'text-gray-600 hover:text-blue-600'
               }`}
             >
               <TrendingUp size={20} />
@@ -528,14 +528,14 @@ const PadelRankingApp = () => {
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
               placeholder="Enter player name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl mb-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl mb-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               onKeyPress={(e) => e.key === 'Enter' && addPlayer()}
               autoFocus
             />
             <div className="flex gap-3">
               <button
                 onClick={addPlayer}
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
+                className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 Add Player
               </button>
@@ -579,16 +579,16 @@ const PadelRankingApp = () => {
               <>
                 {/* Team Selection */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="bg-emerald-50 rounded-xl p-4">
+                  <div className="bg-blue-50 rounded-xl p-4">
                     <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                      <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                       Team 1
                     </h4>
                     <div className="space-y-3">
                       <select
                         value={selectedPlayers.team1Player1}
                         onChange={(e) => setSelectedPlayers({...selectedPlayers, team1Player1: e.target.value})}
-                        className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-lg"
+                        className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 1</option>
                         {players.filter(p => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team1Player1).map(player => (
@@ -598,7 +598,7 @@ const PadelRankingApp = () => {
                       <select
                         value={selectedPlayers.team1Player2}
                         onChange={(e) => setSelectedPlayers({...selectedPlayers, team1Player2: e.target.value})}
-                        className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-lg"
+                        className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 2</option>
                         {players.filter(p => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team1Player2).map(player => (
@@ -721,7 +721,7 @@ const PadelRankingApp = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={submitMatch}
-                    className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
                   >
                     Save Match
                   </button>
