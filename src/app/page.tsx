@@ -1,5 +1,8 @@
-import PadelRankingApp from '@/components/PadelRankingApp';
-
-export default function HomePage() {
-  return <PadelRankingApp />;
+export default function Page() {
+  return (
+    <div>
+      <h1>Kuikma CUP</h1>
+      <p>This is a test page to verify Next.js routing works.</p>
+    </div>
+  );
 }
