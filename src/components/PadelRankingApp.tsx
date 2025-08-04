@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Users, Plus, Trophy, History, UserPlus, TrendingUp, Home, ChevronUp, X, Zap, Award, Target, BarChart3 } from 'lucide-react';
+import { Users, Plus, Trophy, History, UserPlus, TrendingUp, X, Zap, Award, Target, BarChart3 } from 'lucide-react';
 
 // Complete Type definitions
 interface MatchSet {
@@ -18,11 +18,14 @@ interface Match {
   winner: 'team1' | 'team2';
 }
 
-interface Player {
+interface PlayerStats {
   name: string;
   points: number;
   matches: number;
   wins: number;
+}
+
+interface Player extends PlayerStats {
   rank: number;
 }
 
@@ -82,7 +85,7 @@ const PadelRankingApp = () => {
     touchStartRef.current = e.changedTouches[0].clientX;
   };
 
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>): void => {
+  const handleTouchEnd = (_e: React.TouchEvent<HTMLDivElement>): void => {
     if (!touchStartRef.current || !touchEndRef.current) return;
     
     const diff = touchStartRef.current - touchEndRef.current;
@@ -145,7 +148,7 @@ const PadelRankingApp = () => {
   };
 
   const getRankings = (): Player[] => {
-    return players.map((player: string) => ({
+    const playerStats: PlayerStats[] = players.map((player: string) => ({
       name: player,
       points: calculatePoints(player),
       matches: matches.filter((m: Match) => m.team1.includes(player) || m.team2.includes(player)).length,
@@ -153,9 +156,11 @@ const PadelRankingApp = () => {
         (m.team1.includes(player) && m.winner === 'team1') ||
         (m.team2.includes(player) && m.winner === 'team2')
       ).length
-    }))
-    .sort((a: Player, b: Player) => b.points - a.points)
-    .map((player: Player, index: number) => ({ ...player, rank: index + 1 }));
+    }));
+    
+    return playerStats
+      .sort((a: PlayerStats, b: PlayerStats) => b.points - a.points)
+      .map((player: PlayerStats, index: number): Player => ({ ...player, rank: index + 1 }));
   };
 
   const addPlayer = (): void => {
@@ -230,7 +235,7 @@ const PadelRankingApp = () => {
     return matches.slice(-3).reverse();
   };
 
-  const QuickStats = (): JSX.Element => (
+  const QuickStats = (): React.ReactElement => (
     <div className="grid grid-cols-3 gap-3 mb-4">
       <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-3 text-white text-center shadow-lg">
         <div className="text-2xl font-bold">{players.length}</div>
@@ -255,7 +260,7 @@ const PadelRankingApp = () => {
     actionText?: string;
   }
 
-  const EmptyState = ({ icon: Icon, title, subtitle, action, actionText }: EmptyStateProps): JSX.Element => (
+  const EmptyState = ({ icon: Icon, title, subtitle, action, actionText }: EmptyStateProps): React.ReactElement => (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
       <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-6 shadow-lg">
         <Icon size={32} className="text-blue-600" />
