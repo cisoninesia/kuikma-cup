@@ -51,3 +51,86 @@
  ✓ Compiled in 46ms
  ✓ Compiled in 42ms
  ✓ Compiled in 32ms
+ ✓ Compiled / in 15ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 759ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.v4t7c38duu'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.v4t7c38duu'
+}
+[Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.6our50cso05'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.6our50cso05'
+}
+[Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.qyyym97ta4'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.qyyym97ta4'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.igruhpfif1b'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.igruhpfif1b'
+}
+[Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.ee9cyarp7b'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.ee9cyarp7b'
+}
+[Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.hwu9tkvr2w'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/static/development/_buildManifest.js.tmp.hwu9tkvr2w'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/FRAN/padel-ranking-app/.next/server/app/favicon.ico/[__metadata_id__]/route/app-paths-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/FRAN/padel-ranking-app/.next/server/app/favicon.ico/[__metadata_id__]/route/app-paths-manifest.json'
+}
+ ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+   ▲ Next.js 15.4.5 (Turbopack)
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.109.165:3001
+
+ ✓ Starting...
+ ✓ Ready in 979ms
+ ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+   ▲ Next.js 15.4.5 (Turbopack)
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.109.165:3001
+
+ ✓ Starting...
+ ✓ Ready in 901ms
