@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Users, Plus, Trophy, History, UserPlus, TrendingUp, Home, ChevronUp, X, Zap, Award, Target, BarChart3 } from 'lucide-react';
 
-// Type definitions
+// Complete Type definitions
 interface MatchSet {
   team1: number;
   team2: number;
@@ -26,26 +26,44 @@ interface Player {
   rank: number;
 }
 
+interface SelectedPlayers {
+  team1Player1: string;
+  team1Player2: string;
+  team2Player1: string;
+  team2Player2: string;
+}
+
+interface MatchScore {
+  set1Team1: string;
+  set1Team2: string;
+  set2Team1: string;
+  set2Team2: string;
+  set3Team1: string;
+  set3Team2: string;
+}
+
+type TabType = 'rankings' | 'history' | 'team';
+
 const PadelRankingApp = () => {
-  const [activeTab, setActiveTab] = useState('rankings');
+  const [activeTab, setActiveTab] = useState<TabType>('rankings');
   const [players, setPlayers] = useState<string[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
-  const [showAddPlayer, setShowAddPlayer] = useState(false);
-  const [showMatchForm, setShowMatchForm] = useState(false);
-  const [showFAB, setShowFAB] = useState(false);
-  const [newPlayerName, setNewPlayerName] = useState('');
-  const [isFirstTime, setIsFirstTime] = useState(true);
+  const [showAddPlayer, setShowAddPlayer] = useState<boolean>(false);
+  const [showMatchForm, setShowMatchForm] = useState<boolean>(false);
+  const [showFAB, setShowFAB] = useState<boolean>(false);
+  const [newPlayerName, setNewPlayerName] = useState<string>('');
+  const [isFirstTime, setIsFirstTime] = useState<boolean>(true);
   const touchStartRef = useRef<number | null>(null);
   const touchEndRef = useRef<number | null>(null);
 
   // Match form state
-  const [selectedPlayers, setSelectedPlayers] = useState({
+  const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayers>({
     team1Player1: '',
     team1Player2: '',
     team2Player1: '',
     team2Player2: ''
   });
-  const [matchScore, setMatchScore] = useState({
+  const [matchScore, setMatchScore] = useState<MatchScore>({
     set1Team1: '',
     set1Team2: '',
     set2Team1: '',
@@ -60,11 +78,11 @@ const PadelRankingApp = () => {
   }, [players.length, matches.length]);
 
   // Swipe gesture handling
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>): void => {
     touchStartRef.current = e.changedTouches[0].clientX;
   };
 
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>): void => {
     if (!touchStartRef.current || !touchEndRef.current) return;
     
     const diff = touchStartRef.current - touchEndRef.current;
@@ -73,14 +91,14 @@ const PadelRankingApp = () => {
     if (Math.abs(diff) > threshold) {
       if (diff > 0) {
         // Swipe left - next tab
-        const tabs = ['rankings', 'history', 'team'];
+        const tabs: TabType[] = ['rankings', 'history', 'team'];
         const currentIndex = tabs.indexOf(activeTab);
         if (currentIndex < tabs.length - 1) {
           setActiveTab(tabs[currentIndex + 1]);
         }
       } else {
         // Swipe right - previous tab
-        const tabs = ['rankings', 'history', 'team'];
+        const tabs: TabType[] = ['rankings', 'history', 'team'];
         const currentIndex = tabs.indexOf(activeTab);
         if (currentIndex > 0) {
           setActiveTab(tabs[currentIndex - 1]);
@@ -92,26 +110,26 @@ const PadelRankingApp = () => {
     touchEndRef.current = null;
   };
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>): void => {
     touchEndRef.current = e.changedTouches[0].clientX;
   };
 
   // Calculate ATP-style points
-  const calculatePoints = (playerName: string) => {
+  const calculatePoints = (playerName: string): number => {
     let matchWins = 0;
     let setWins = 0;
     let gameWins = 0;
 
-    matches.forEach(match => {
+    matches.forEach((match: Match) => {
       const isTeam1 = match.team1.includes(playerName);
       const isTeam2 = match.team2.includes(playerName);
       
       if (!isTeam1 && !isTeam2) return;
 
-      const playerTeam = isTeam1 ? 'team1' : 'team2';
-      const opponentTeam = isTeam1 ? 'team2' : 'team1';
+      const playerTeam: 'team1' | 'team2' = isTeam1 ? 'team1' : 'team2';
+      const opponentTeam: 'team1' | 'team2' = isTeam1 ? 'team2' : 'team1';
 
-      match.sets.forEach(set => {
+      match.sets.forEach((set: MatchSet) => {
         if (set[playerTeam] > set[opponentTeam]) {
           setWins++;
         }
@@ -127,20 +145,20 @@ const PadelRankingApp = () => {
   };
 
   const getRankings = (): Player[] => {
-    return players.map(player => ({
+    return players.map((player: string) => ({
       name: player,
       points: calculatePoints(player),
-      matches: matches.filter(m => m.team1.includes(player) || m.team2.includes(player)).length,
-      wins: matches.filter(m => 
+      matches: matches.filter((m: Match) => m.team1.includes(player) || m.team2.includes(player)).length,
+      wins: matches.filter((m: Match) => 
         (m.team1.includes(player) && m.winner === 'team1') ||
         (m.team2.includes(player) && m.winner === 'team2')
       ).length
     }))
-    .sort((a, b) => b.points - a.points)
-    .map((player, index) => ({ ...player, rank: index + 1 }));
+    .sort((a: Player, b: Player) => b.points - a.points)
+    .map((player: Player, index: number) => ({ ...player, rank: index + 1 }));
   };
 
-  const addPlayer = () => {
+  const addPlayer = (): void => {
     if (newPlayerName.trim() && !players.includes(newPlayerName.trim())) {
       setPlayers([...players, newPlayerName.trim()]);
       setNewPlayerName('');
@@ -149,7 +167,7 @@ const PadelRankingApp = () => {
     }
   };
 
-  const submitMatch = () => {
+  const submitMatch = (): void => {
     const { team1Player1, team1Player2, team2Player1, team2Player2 } = selectedPlayers;
     const { set1Team1, set1Team2, set2Team1, set2Team2, set3Team1, set3Team2 } = matchScore;
 
@@ -159,7 +177,7 @@ const PadelRankingApp = () => {
       return;
     }
 
-    const sets = [
+    const sets: MatchSet[] = [
       { team1: parseInt(set1Team1), team2: parseInt(set1Team2) },
       { team1: parseInt(set2Team1), team2: parseInt(set2Team2) }
     ];
@@ -170,12 +188,12 @@ const PadelRankingApp = () => {
 
     let team1Sets = 0;
     let team2Sets = 0;
-    sets.forEach(set => {
+    sets.forEach((set: MatchSet) => {
       if (set.team1 > set.team2) team1Sets++;
       else team2Sets++;
     });
 
-    const newMatch = {
+    const newMatch: Match = {
       id: Date.now(),
       date: new Date().toLocaleDateString(),
       team1: [team1Player1, team1Player2],
@@ -205,14 +223,14 @@ const PadelRankingApp = () => {
   };
 
   const formatMatchScore = (match: Match): string => {
-    return match.sets.map(set => `${set.team1}-${set.team2}`).join(', ');
+    return match.sets.map((set: MatchSet) => `${set.team1}-${set.team2}`).join(', ');
   };
 
   const getRecentMatches = (): Match[] => {
     return matches.slice(-3).reverse();
   };
 
-  const QuickStats = () => (
+  const QuickStats = (): JSX.Element => (
     <div className="grid grid-cols-3 gap-3 mb-4">
       <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-3 text-white text-center shadow-lg">
         <div className="text-2xl font-bold">{players.length}</div>
@@ -223,19 +241,21 @@ const PadelRankingApp = () => {
         <div className="text-xs opacity-90">Matches</div>
       </div>
       <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl p-3 text-white text-center shadow-lg">
-        <div className="text-2xl font-bold">{matches.length > 0 ? Math.round(matches.reduce((acc, m) => acc + m.sets.reduce((s, set) => s + set.team1 + set.team2, 0), 0) / matches.length) : 0}</div>
+        <div className="text-2xl font-bold">{matches.length > 0 ? Math.round(matches.reduce((acc: number, m: Match) => acc + m.sets.reduce((s: number, set: MatchSet) => s + set.team1 + set.team2, 0), 0) / matches.length) : 0}</div>
         <div className="text-xs opacity-90">Avg Sets</div>
       </div>
     </div>
   );
 
-  const EmptyState = ({ icon: Icon, title, subtitle, action, actionText }: {
+  interface EmptyStateProps {
     icon: React.ComponentType<{ size: number; className?: string }>;
     title: string;
     subtitle: string;
     action?: () => void;
     actionText?: string;
-  }) => (
+  }
+
+  const EmptyState = ({ icon: Icon, title, subtitle, action, actionText }: EmptyStateProps): JSX.Element => (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
       <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-6 shadow-lg">
         <Icon size={32} className="text-blue-600" />
@@ -298,7 +318,7 @@ const PadelRankingApp = () => {
                       Recent Matches
                     </h3>
                     <div className="space-y-2">
-                      {getRecentMatches().map((match) => (
+                      {getRecentMatches().map((match: Match) => (
                         <div key={match.id} className="bg-gray-50 rounded-xl p-3">
                           <div className="flex justify-between items-center">
                             <div className="text-sm">
@@ -332,7 +352,7 @@ const PadelRankingApp = () => {
                     />
                   ) : (
                     <div className="space-y-3">
-                      {getRankings().map((player) => (
+                      {getRankings().map((player: Player) => (
                         <div key={player.name} className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                           <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg ${
                             player.rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' :
@@ -377,7 +397,7 @@ const PadelRankingApp = () => {
               />
             ) : (
               <div className="space-y-3">
-                {matches.slice().reverse().map((match) => (
+                {matches.slice().reverse().map((match: Match) => (
                   <div key={match.id} className="border border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition-colors">
                     <div className="flex justify-between items-start mb-3">
                       <div className="text-sm text-gray-500">{match.date}</div>
@@ -430,7 +450,7 @@ const PadelRankingApp = () => {
               />
             ) : (
               <div className="grid grid-cols-1 gap-3">
-                {players.map((player, index) => (
+                {players.map((player: string, index: number) => (
                   <div key={index} className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
@@ -444,7 +464,7 @@ const PadelRankingApp = () => {
                       </div>
                       <div className="text-right">
                         <div className="text-lg font-bold text-blue-600">
-                          {matches.filter(m => 
+                          {matches.filter((m: Match) => 
                             (m.team1.includes(player) && m.winner === 'team1') ||
                             (m.team2.includes(player) && m.winner === 'team2')
                           ).length}
@@ -620,7 +640,7 @@ const PadelRankingApp = () => {
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 1</option>
-                        {players.filter(p => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team1Player1).map(player => (
+                        {players.filter((p: string) => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team1Player1).map((player: string) => (
                           <option key={player} value={player}>{player}</option>
                         ))}
                       </select>
@@ -630,7 +650,7 @@ const PadelRankingApp = () => {
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 2</option>
-                        {players.filter(p => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team1Player2).map(player => (
+                        {players.filter((p: string) => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team1Player2).map((player: string) => (
                           <option key={player} value={player}>{player}</option>
                         ))}
                       </select>
@@ -649,7 +669,7 @@ const PadelRankingApp = () => {
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 1</option>
-                        {players.filter(p => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team2Player1).map(player => (
+                        {players.filter((p: string) => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team2Player1).map((player: string) => (
                           <option key={player} value={player}>{player}</option>
                         ))}
                       </select>
@@ -659,7 +679,7 @@ const PadelRankingApp = () => {
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 2</option>
-                        {players.filter(p => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team2Player2).map(player => (
+                        {players.filter((p: string) => !Object.values(selectedPlayers).includes(p) || p === selectedPlayers.team2Player2).map((player: string) => (
                           <option key={player} value={player}>{player}</option>
                         ))}
                       </select>
