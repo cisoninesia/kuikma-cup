@@ -37,11 +37,11 @@ const PadelRankingApp = () => {
   }, [players.length, matches.length]);
 
   // Swipe gesture handling
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     touchStartRef.current = e.changedTouches[0].clientX;
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!touchStartRef.current || !touchEndRef.current) return;
     
     const diff = touchStartRef.current - touchEndRef.current;
@@ -69,12 +69,12 @@ const PadelRankingApp = () => {
     touchEndRef.current = null;
   };
 
-  const handleTouchMove = (e) => {
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     touchEndRef.current = e.changedTouches[0].clientX;
   };
 
   // Calculate ATP-style points
-  const calculatePoints = (playerName) => {
+  const calculatePoints = (playerName: string) => {
     let matchWins = 0;
     let setWins = 0;
     let gameWins = 0;
@@ -206,7 +206,13 @@ const PadelRankingApp = () => {
     </div>
   );
 
-  const EmptyState = ({ icon: Icon, title, subtitle, action, actionText }) => (
+  const EmptyState = ({ icon: Icon, title, subtitle, action, actionText }: {
+    icon: React.ComponentType<{ size: number; className?: string }>;
+    title: string;
+    subtitle: string;
+    action?: () => void;
+    actionText?: string;
+  }) => (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
       <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-6 shadow-lg">
         <Icon size={32} className="text-blue-600" />
@@ -526,10 +532,10 @@ const PadelRankingApp = () => {
             <input
               type="text"
               value={newPlayerName}
-              onChange={(e) => setNewPlayerName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPlayerName(e.target.value)}
               placeholder="Enter player name"
               className="w-full px-4 py-3 border border-gray-300 rounded-xl mb-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-              onKeyPress={(e) => e.key === 'Enter' && addPlayer()}
+              onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && addPlayer()}
               autoFocus
             />
             <div className="flex gap-3">
@@ -587,7 +593,7 @@ const PadelRankingApp = () => {
                     <div className="space-y-3">
                       <select
                         value={selectedPlayers.team1Player1}
-                        onChange={(e) => setSelectedPlayers({...selectedPlayers, team1Player1: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedPlayers({...selectedPlayers, team1Player1: e.target.value})}
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 1</option>
@@ -597,7 +603,7 @@ const PadelRankingApp = () => {
                       </select>
                       <select
                         value={selectedPlayers.team1Player2}
-                        onChange={(e) => setSelectedPlayers({...selectedPlayers, team1Player2: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedPlayers({...selectedPlayers, team1Player2: e.target.value})}
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 2</option>
@@ -616,7 +622,7 @@ const PadelRankingApp = () => {
                     <div className="space-y-3">
                       <select
                         value={selectedPlayers.team2Player1}
-                        onChange={(e) => setSelectedPlayers({...selectedPlayers, team2Player1: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedPlayers({...selectedPlayers, team2Player1: e.target.value})}
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 1</option>
@@ -626,7 +632,7 @@ const PadelRankingApp = () => {
                       </select>
                       <select
                         value={selectedPlayers.team2Player2}
-                        onChange={(e) => setSelectedPlayers({...selectedPlayers, team2Player2: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedPlayers({...selectedPlayers, team2Player2: e.target.value})}
                         className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-lg"
                       >
                         <option value="">Select Player 2</option>
@@ -650,7 +656,7 @@ const PadelRankingApp = () => {
                         min="0"
                         max="7"
                         value={matchScore.set1Team1}
-                        onChange={(e) => setMatchScore({...matchScore, set1Team1: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMatchScore({...matchScore, set1Team1: e.target.value})}
                         className="w-16 h-12 px-2 border border-gray-300 rounded-xl text-center text-lg font-semibold"
                         placeholder="0"
                       />
@@ -660,7 +666,7 @@ const PadelRankingApp = () => {
                         min="0"
                         max="7"
                         value={matchScore.set1Team2}
-                        onChange={(e) => setMatchScore({...matchScore, set1Team2: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMatchScore({...matchScore, set1Team2: e.target.value})}
                         className="w-16 h-12 px-2 border border-gray-300 rounded-xl text-center text-lg font-semibold"
                         placeholder="0"
                       />
@@ -674,7 +680,7 @@ const PadelRankingApp = () => {
                         min="0"
                         max="7"
                         value={matchScore.set2Team1}
-                        onChange={(e) => setMatchScore({...matchScore, set2Team1: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMatchScore({...matchScore, set2Team1: e.target.value})}
                         className="w-16 h-12 px-2 border border-gray-300 rounded-xl text-center text-lg font-semibold"
                         placeholder="0"
                       />
@@ -684,7 +690,7 @@ const PadelRankingApp = () => {
                         min="0"
                         max="7"
                         value={matchScore.set2Team2}
-                        onChange={(e) => setMatchScore({...matchScore, set2Team2: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMatchScore({...matchScore, set2Team2: e.target.value})}
                         className="w-16 h-12 px-2 border border-gray-300 rounded-xl text-center text-lg font-semibold"
                         placeholder="0"
                       />
@@ -698,7 +704,7 @@ const PadelRankingApp = () => {
                         min="0"
                         max="7"
                         value={matchScore.set3Team1}
-                        onChange={(e) => setMatchScore({...matchScore, set3Team1: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMatchScore({...matchScore, set3Team1: e.target.value})}
                         className="w-16 h-12 px-2 border border-gray-300 rounded-xl text-center text-lg font-semibold"
                         placeholder="0"
                       />
@@ -708,7 +714,7 @@ const PadelRankingApp = () => {
                         min="0"
                         max="7"
                         value={matchScore.set3Team2}
-                        onChange={(e) => setMatchScore({...matchScore, set3Team2: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMatchScore({...matchScore, set3Team2: e.target.value})}
                         className="w-16 h-12 px-2 border border-gray-300 rounded-xl text-center text-lg font-semibold"
                         placeholder="0"
                       />
