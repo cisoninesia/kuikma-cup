@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Users, Plus, Trophy, History, UserPlus, TrendingUp, X, Zap, Award, Target, BarChart3 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { runDiagnostics } from '../utils/diagnostics';
 
 // Complete Type definitions
 interface MatchSet {
@@ -10,12 +12,13 @@ interface MatchSet {
 }
 
 interface Match {
-  id: number;
+  id: string;
   date: string;
   team1: string[];
   team2: string[];
   sets: MatchSet[];
   winner: 'team1' | 'team2';
+  created_at?: string;
 }
 
 interface PlayerStats {
@@ -56,6 +59,7 @@ const PadelRankingApp = () => {
   const [showFAB, setShowFAB] = useState<boolean>(false);
   const [newPlayerName, setNewPlayerName] = useState<string>('');
   const [isFirstTime, setIsFirstTime] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const touchStartRef = useRef<number | null>(null);
   const touchEndRef = useRef<number | null>(null);
 
@@ -75,17 +79,107 @@ const PadelRankingApp = () => {
     set3Team2: ''
   });
 
+  // Load data from Supabase on component mount
+  useEffect(() => {
+    loadData();
+    
+    // Run diagnostics in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔧 Development mode - running diagnostics...');
+      runDiagnostics();
+    }
+  }, []);
+
   // Check if first time user
   useEffect(() => {
     setIsFirstTime(players.length === 0 && matches.length === 0);
   }, [players.length, matches.length]);
+
+  const loadData = async () => {
+    setLoading(true);
+    console.log('Loading data from Supabase...');
+    
+    try {
+      // Test connection first
+      console.log('Testing Supabase connection...');
+      const { data: connectionTest } = await supabase
+        .from('players')
+        .select('count', { count: 'exact', head: true });
+      
+      console.log('Connection test successful:', connectionTest);
+
+      // Load players
+      console.log('Loading players...');
+      const { data: playersData, error: playersError } = await supabase
+        .from('players')
+        .select('name')
+        .order('created_at', { ascending: true });
+
+      console.log('Players data result:', { playersData, playersError });
+
+      if (playersError) {
+        console.error('Players error details:', {
+          message: playersError.message,
+          details: playersError.details,
+          hint: playersError.hint,
+          code: playersError.code
+        });
+        throw playersError;
+      }
+
+      // Load matches
+      console.log('Loading matches...');
+      const { data: matchesData, error: matchesError } = await supabase
+        .from('matches')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      console.log('Matches data result:', { matchesData, matchesError });
+
+      if (matchesError) {
+        console.error('Matches error details:', {
+          message: matchesError.message,
+          details: matchesError.details,
+          hint: matchesError.hint,
+          code: matchesError.code
+        });
+        throw matchesError;
+      }
+
+      // Set players
+      const playersList = playersData?.map(p => p.name) || [];
+      console.log('Setting players:', playersList);
+      setPlayers(playersList);
+
+      // Transform matches data
+      const transformedMatches: Match[] = matchesData?.map(match => ({
+        id: match.id,
+        date: match.date,
+        team1: [match.team1_player1, match.team1_player2],
+        team2: [match.team2_player1, match.team2_player2],
+        sets: match.sets,
+        winner: match.winner,
+        created_at: match.created_at
+      })) || [];
+
+      console.log('Setting matches:', transformedMatches);
+      setMatches(transformedMatches);
+      console.log('Data loading completed successfully');
+    } catch (error: unknown) {
+      console.error('Error loading data:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Error loading data from database: ${errorMessage}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Swipe gesture handling
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>): void => {
     touchStartRef.current = e.changedTouches[0].clientX;
   };
 
-  const handleTouchEnd = (_e: React.TouchEvent<HTMLDivElement>): void => {
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>): void => {
     if (!touchStartRef.current || !touchEndRef.current) return;
     
     const diff = touchStartRef.current - touchEndRef.current;
@@ -163,16 +257,45 @@ const PadelRankingApp = () => {
       .map((player: PlayerStats, index: number): Player => ({ ...player, rank: index + 1 }));
   };
 
-  const addPlayer = (): void => {
-    if (newPlayerName.trim() && !players.includes(newPlayerName.trim())) {
+  const addPlayer = async (): Promise<void> => {
+    if (!newPlayerName.trim() || players.includes(newPlayerName.trim())) {
+      return;
+    }
+
+    console.log('Attempting to add player:', newPlayerName.trim());
+    
+    try {
+      const { data, error } = await supabase
+        .from('players')
+        .insert([{ name: newPlayerName.trim() }])
+        .select();
+
+      console.log('Player insert result:', { data, error });
+
+      if (error) {
+        console.error('Player insert error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        alert(`Error adding player: ${error.message}${error.details ? ' - ' + error.details : ''}`);
+        return;
+      }
+
+      console.log('Player added successfully:', data);
       setPlayers([...players, newPlayerName.trim()]);
       setNewPlayerName('');
       setShowAddPlayer(false);
       setShowFAB(false);
+    } catch (error: unknown) {
+      console.error('Unexpected error adding player:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Unexpected error: ${errorMessage}`);
     }
   };
 
-  const submitMatch = (): void => {
+  const submitMatch = async (): Promise<void> => {
     const { team1Player1, team1Player2, team2Player1, team2Player2 } = selectedPlayers;
     const { set1Team1, set1Team2, set2Team1, set2Team2, set3Team1, set3Team2 } = matchScore;
 
@@ -198,16 +321,88 @@ const PadelRankingApp = () => {
       else team2Sets++;
     });
 
-    const newMatch: Match = {
-      id: Date.now(),
-      date: new Date().toLocaleDateString(),
-      team1: [team1Player1, team1Player2],
-      team2: [team2Player1, team2Player2],
-      sets: sets,
-      winner: team1Sets > team2Sets ? 'team1' : 'team2'
-    };
+    const winner = team1Sets > team2Sets ? 'team1' : 'team2';
+    const matchDate = new Date().toLocaleDateString();
 
-    setMatches([...matches, newMatch]);
+    console.log('Attempting to save match with data:', {
+      date: matchDate,
+      team1_player1: team1Player1,
+      team1_player2: team1Player2,
+      team2_player1: team2Player1,
+      team2_player2: team2Player2,
+      sets: sets,
+      winner: winner
+    });
+
+    try {
+      // First, let's test the connection
+      console.log('Testing Supabase connection...');
+      const { data: testData, error: testError } = await supabase
+        .from('matches')
+        .select('count', { count: 'exact', head: true });
+      
+      console.log('Connection test result:', { testData, testError });
+      
+      if (testError) {
+        console.error('Connection test failed:', testError);
+        alert(`Database connection error: ${testError.message}`);
+        return;
+      }
+
+      // Now try to insert the match
+      console.log('Inserting match data...');
+      const { data, error } = await supabase
+        .from('matches')
+        .insert([{
+          date: matchDate,
+          team1_player1: team1Player1,
+          team1_player2: team1Player2,
+          team2_player1: team2Player1,
+          team2_player2: team2Player2,
+          sets: sets,
+          winner: winner
+        }])
+        .select()
+        .single();
+
+      console.log('Insert result:', { data, error });
+
+      if (error) {
+        console.error('Insert error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        alert(`Database insert error: ${error.message}${error.details ? ' - ' + error.details : ''}`);
+        return;
+      }
+
+      if (!data) {
+        console.error('No data returned from insert');
+        alert('Error: No data returned from database insert');
+        return;
+      }
+
+      console.log('Match saved successfully:', data);
+
+      const newMatch: Match = {
+        id: data.id,
+        date: matchDate,
+        team1: [team1Player1, team1Player2],
+        team2: [team2Player1, team2Player2],
+        sets: sets,
+        winner: winner
+      };
+
+      setMatches([...matches, newMatch]);
+      console.log('Match added to local state');
+    } catch (error: unknown) {
+      console.error('Unexpected error saving match:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Unexpected error: ${errorMessage}`);
+      return;
+    }
     
     setSelectedPlayers({
       team1Player1: '',
@@ -300,8 +495,18 @@ const PadelRankingApp = () => {
         </div>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div className="max-w-md mx-auto px-4 pb-24 pt-4">
+          <div className="flex items-center justify-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <div className="max-w-md mx-auto px-4 pb-24 pt-4">
+      {!loading && (
+        <div className="max-w-md mx-auto px-4 pb-24 pt-4">
         {/* Rankings Tab */}
         {activeTab === 'rankings' && (
           <div className="space-y-4">
@@ -483,7 +688,8 @@ const PadelRankingApp = () => {
             )}
           </div>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Floating Action Button */}
       {!isFirstTime && (
